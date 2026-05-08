@@ -260,3 +260,98 @@
     background-color: rgba(0, 0, 0, 0.35);
     will-change: opacity;
 }
+
+/* td-permanent-responsive-widget-size */
+
+/*
+  Responsive Tiledesk / Chat21 widget sizing.
+  Targets:
+  - #tiledesk-container: outer launcher container
+  - #tiledeskdiv: iframe wrapper
+  - #tiledeskiframe: actual widget iframe
+*/
+
+@media screen and (max-width: 1200px) {
+  #tiledesk-container.open,
+  #tiledesk-container.open #tiledeskdiv,
+  #tiledesk-container.open #tiledeskiframe {
+    width: 360px !important;
+    height: 540px !important;
+    max-width: calc(100vw - 32px) !important;
+    max-height: calc(100vh - 80px) !important;
+    right: 16px !important;
+    bottom: 16px !important;
+    left: auto !important;
+    top: auto !important;
+  }
+
+  #tiledesk-container.open,
+  #tiledesk-container.open #tiledeskdiv {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #tiledesk-container.open,
+  #tiledesk-container.open #tiledeskdiv,
+  #tiledesk-container.open #tiledeskiframe {
+    width: 320px !important;
+    height: 520px !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100vh - 80px) !important;
+    right: 12px !important;
+    bottom: 12px !important;
+    left: auto !important;
+    top: auto !important;
+  }
+
+  #tiledesk-container.open,
+  #tiledesk-container.open #tiledeskdiv {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #tiledesk-container.open,
+  #tiledesk-container.open #tiledeskdiv,
+  #tiledesk-container.open #tiledeskiframe {
+    width: calc(100vw - 24px) !important;
+    height: 70vh !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: 70vh !important;
+    right: 12px !important;
+    bottom: 12px !important;
+    left: auto !important;
+    top: auto !important;
+  }
+
+  #tiledesk-container.open,
+  #tiledesk-container.open #tiledeskdiv {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible !important;
+  }
+}
+
