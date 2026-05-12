@@ -751,15 +751,24 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
       this.logger.debug('[CONV-COMP] subscribeTypings data:', data);
       const userTyping = this.membersConversation.includes(key);
       if ( !userTyping && key) {
+        const typingTimeout = Number(waitTime);
+        const safeTypingTimeout = !isNaN(typingTimeout) && typingTimeout > 0 && typingTimeout < 10000
+          ? typingTimeout
+          : 3000;
+
+        clearTimeout(this.setTimeoutWritingMessages);
         this.isTypings = true;
+
         setTimeout(function () {
-          that.conversationContent.scrollToBottom();
+          if (that.conversationContent) {
+            that.conversationContent.scrollToBottom();
+          }
         }, 0);
-        // clearTimeout(this.setTimeoutWritingMessages);
+
         this.setTimeoutWritingMessages = setTimeout(() => {
             that.isTypings = false;
-        }, waitTime);
-        // this.initiTimeout(waitTime)
+            that.setTimeoutWritingMessages = null;
+        }, safeTypingTimeout);
       }
     } catch (error) {
       this.logger.error('[CONV-COMP] error: ', error);
@@ -822,7 +831,9 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
             this.showThinkingMessage = false;
           }
 
-          // Clear any pending upload spinner once a message is confirmed in the conversation.
+          // Clear pending indicators once a message is confirmed in the conversation.
+          that.resetTimeout();
+
           if (that.conversationContent) {
             that.conversationContent.showUploadProgress = false;
           }
