@@ -737,6 +737,10 @@ class Chat21Client {
     }
 
     lastArchivedConversations(callback) {
+        if (!this.user_id || this.user_id === "null" || this.user_id === "undefined") {
+            console.warn("Chat21 user_id missing; skipping lastArchivedConversations");
+            return;
+        }
         // ex.: http://localhost:8004/tilechat/04-ANDREASPONZIELLO/archived_conversations
         const URL = `${this.APIendpoint}/${this.appid}/${this.user_id}/archived_conversations`
         if (this.log) {console.log("getting last archived conversations...", URL)}
@@ -760,6 +764,10 @@ class Chat21Client {
     }
 
     lastConversations(archived, callback) {
+        if (!this.user_id || this.user_id === "null" || this.user_id === "undefined") {
+            console.warn("Chat21 user_id missing; skipping lastConversations");
+            return;
+        }
         // ex.: http://localhost:8004/tilechat/04-ANDREASPONZIELLO/conversations
         const archived_url_part = archived ? '/archived' : '';
         const URL = `${this.APIendpoint}/${this.appid}/${this.user_id}/conversations` + archived_url_part;
