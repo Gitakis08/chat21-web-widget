@@ -775,9 +775,9 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   resetTimeout(){
-    this.isTypings = false
+    this.isTypings = false;
+    clearTimeout(this.setTimeoutWritingMessages);
     this.setTimeoutWritingMessages = null;
-    clearTimeout(this.setTimeoutWritingMessages)
   }
 
   /**
@@ -820,6 +820,11 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
         if (msg) {
           if (msg.sender !== this.senderId) {
             this.showThinkingMessage = false;
+          }
+
+          // Clear any pending upload spinner once a message is confirmed in the conversation.
+          if (that.conversationContent) {
+            that.conversationContent.showUploadProgress = false;
           }
 
           that.newMessageAdded(msg);
