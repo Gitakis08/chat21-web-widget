@@ -123,11 +123,16 @@ export class ConversationContentComponent implements OnInit {
     this.uploadService.BSStateUpload.subscribe((data: any) => {
       this.logger.debug('[CONV-CONTENT] BSStateUpload', data);
       // && data.type.startsWith("application")
-      if (data) { 
-          data.upload === 100 || isNaN(data.upload)? this.showUploadProgress = false : this.showUploadProgress = true
-          this.uploadProgress = data.upload
-          this.fileType = 'file'
-          this.scrollToBottom()
+      if (data) {
+          const upload = Number(data.upload);
+          this.showUploadProgress = !isNaN(upload) && upload > 0 && upload < 100;
+          this.uploadProgress = upload;
+          this.fileType = 'file';
+          if (this.showUploadProgress) {
+            this.scrollToBottom();
+          }
+        } else {
+          this.showUploadProgress = false;
         }
     });
   }
