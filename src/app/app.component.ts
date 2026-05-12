@@ -816,7 +816,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             groupMembers[this.g.senderId] = 1;
             groupMembers[newConvId] = 1;
 
-            this.chat21Service.chatClient.groupCreate(newConvId, groupMembers, (err, res) => {
+            this.chat21Service.chatClient.groupCreate(newConvId, newConvId, groupMembers, (err, res) => {
                 if (err) {
                     this.logger.error('[APP-COMP] create support group error', err);
                 } else {
