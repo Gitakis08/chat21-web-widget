@@ -103,10 +103,32 @@ export class MQTTGroupsHandler extends GroupsHandlerService {
     }
 
     create(groupName: string, members: [string], callback?: (res: any, error: any) => void): Promise<any> {
-        // throw new Error('Method not implemented.');
-        // Ignorare versione firebase
-        console.log('Method not implemented.');
-        return;
+        const listMembers = {};
+        members.forEach(member => {
+            listMembers[member] = 1;
+        });
+
+        const body = {
+            group_name: groupName,
+            group_members: listMembers
+        };
+
+        const url = this.APIendpoint + '/' + this.tenant + '/groups';
+
+        return this.http.post(url, body).toPromise()
+            .then((res) => {
+                if (callback) {
+                    callback(res, null);
+                }
+                return res;
+            })
+            .catch((error) => {
+                this.logger.error('[MQTT-GROUPS-SERV] createGROUP error: ', error);
+                if (callback) {
+                    callback(null, error);
+                }
+                throw error;
+            });
     }
 
     // create(groupName: string, members: [string], callback?:(res: any, error: any)=>void): Promise<any> {

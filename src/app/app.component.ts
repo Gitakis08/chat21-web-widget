@@ -23,6 +23,7 @@ import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/a
 import { ConversationHandlerBuilderService } from 'src/chat21-core/providers/abstract/conversation-handler-builder.service';
 import { ConversationHandlerService } from 'src/chat21-core/providers/abstract/conversation-handler.service';
 import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
+import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-handler.service';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { MessagingAuthService } from 'src/chat21-core/providers/abstract/messagingAuth.service';
 import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
@@ -136,6 +137,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     public messagingAuthService: MessagingAuthService,
     public conversationsHandlerService: ConversationsHandlerService,
     public archivedConversationsService: ArchivedConversationsHandlerService,
+    public groupsHandlerService: GroupsHandlerService,
     public conversationHandlerBuilderService: ConversationHandlerBuilderService,
     public imageRepoService: ImageRepoService,
     public typingService: TypingService,
@@ -808,6 +810,20 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         const newConvId = this.generateNewUidConversation();
         this.g.setParameter('recipientId', newConvId);
         this.appStorageService.setItem('recipientId', newConvId)
+
+        try {
+            const groupMembers = [this.g.senderId, newConvId] as any;
+            this.groupsHandlerService.create(newConvId, groupMembers, (res, err) => {
+                if (err) {
+                    this.logger.error('[APP-COMP] create support group error', err);
+                } else {
+                    this.logger.debug('[APP-COMP] support group created', res);
+                }
+            });
+        } catch (e) {
+            this.logger.error('[APP-COMP] create support group exception', e);
+        }
+
         this.logger.debug('[APP-COMP]  recipientId: ', this.g.recipientId);
         this.isConversationArchived = false;
         
