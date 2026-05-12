@@ -912,6 +912,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.logger.debug('[APP-COMP] senderId: ', senderId);
         this.logger.debug('[APP-COMP] tenant: ', tenant);
 
+        if (!senderId || senderId === 'null' || senderId === 'undefined') {
+            this.logger.warn('[APP-COMP] skip conversations init: senderId missing', senderId);
+            return;
+        }
+
         // 1 - init chatConversationsHandler and  archviedConversationsHandler
         await this.conversationsHandlerService.initialize(tenant, senderId, translationMap)
         await this.archivedConversationsService.initialize(tenant, senderId, translationMap)
