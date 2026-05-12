@@ -284,7 +284,7 @@ class Chat21Client {
         // xmlhttp.open("GET", URL, true);
         // xmlhttp.setRequestHeader("authorization", this.jwt);
         // xmlhttp.onreadystatechange = function() {
-        //     if (callback && xmlhttp.readyState == 4 && xmlhttp.status == 200 && xmlhttp.responseText) {
+        //     if (callback && xmlhttp.readyState == 4 && xmlhttp.status >= 200 && xmlhttp.status < 300 && xmlhttp.responseText) {
         //         try {
         //             const json = JSON.parse(xmlhttp.responseText)
         //             callback(null, json.result)
@@ -749,7 +749,7 @@ class Chat21Client {
         xmlhttp.setRequestHeader("authorization", this.jwt);
         xmlhttp.onreadystatechange = function() {
             // console.log("onreadystatechange!")
-            if (callback && xmlhttp.readyState == 4 && xmlhttp.status == 200 && xmlhttp.responseText) {
+            if (callback && xmlhttp.readyState == 4 && xmlhttp.status >= 200 && xmlhttp.status < 300 && xmlhttp.responseText) {
                 try {
                     const json = JSON.parse(xmlhttp.responseText)
                     callback(null, json.result)
@@ -777,7 +777,7 @@ class Chat21Client {
         xmlhttp.setRequestHeader("authorization", this.jwt);
         xmlhttp.onreadystatechange = function() {
             // console.log("onreadystatechange!")
-            if (callback && xmlhttp.readyState == 4 && xmlhttp.status == 200 && xmlhttp.responseText) {
+            if (callback && xmlhttp.readyState == 4 && xmlhttp.status >= 200 && xmlhttp.status < 300 && xmlhttp.responseText) {
                 try {
                     const json = JSON.parse(xmlhttp.responseText)
                     callback(null, json.result)
@@ -845,7 +845,7 @@ class Chat21Client {
         // xmlhttp.open("GET", URL, true);
         // xmlhttp.setRequestHeader("authorization", this.jwt);
         // xmlhttp.onreadystatechange = function() {
-        //     if (callback && xmlhttp.readyState == 4 && xmlhttp.status == 200 && xmlhttp.responseText) {
+        //     if (callback && xmlhttp.readyState == 4 && xmlhttp.status >= 200 && xmlhttp.status < 300 && xmlhttp.responseText) {
         //         try {
         //             const json = JSON.parse(xmlhttp.responseText);
         //             if (json && json.result && Array.isArray(json.result) && json.result.length ==1) {
@@ -875,7 +875,7 @@ class Chat21Client {
         xmlhttp.setRequestHeader("authorization", this.jwt);
         xmlhttp.onreadystatechange = function() {
             // console.log("onreadystatechange messages!")
-            if (callback && xmlhttp.readyState == 4 && xmlhttp.status == 200 && xmlhttp.responseText) {
+            if (callback && xmlhttp.readyState == 4 && xmlhttp.status >= 200 && xmlhttp.status < 300 && xmlhttp.responseText) {
                 // console.log("xmlhttp...", xmlhttp.responseText)
                 try {
                     // console.log("parsing json messages")
@@ -906,7 +906,7 @@ class Chat21Client {
                 xmlhttp.setRequestHeader(key, options.headers[key]);
             });
             xmlhttp.onreadystatechange = function() {
-                if (callback && xmlhttp.readyState == 4 && xmlhttp.status == 200 && xmlhttp.responseText) {
+                if (callback && xmlhttp.readyState == 4 && xmlhttp.status >= 200 && xmlhttp.status < 300 && xmlhttp.responseText) {
                     try {
                         const json = JSON.parse(xmlhttp.responseText)
                         callback(null, null, json)
