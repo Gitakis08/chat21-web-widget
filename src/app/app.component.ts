@@ -23,7 +23,7 @@ import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/a
 import { ConversationHandlerBuilderService } from 'src/chat21-core/providers/abstract/conversation-handler-builder.service';
 import { ConversationHandlerService } from 'src/chat21-core/providers/abstract/conversation-handler.service';
 import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
-import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-handler.service';
+import { Chat21Service } from 'src/chat21-core/providers/mqtt/chat-service';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { MessagingAuthService } from 'src/chat21-core/providers/abstract/messagingAuth.service';
 import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
@@ -137,7 +137,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     public messagingAuthService: MessagingAuthService,
     public conversationsHandlerService: ConversationsHandlerService,
     public archivedConversationsService: ArchivedConversationsHandlerService,
-    public groupsHandlerService: GroupsHandlerService,
+    public chat21Service: Chat21Service,
     public conversationHandlerBuilderService: ConversationHandlerBuilderService,
     public imageRepoService: ImageRepoService,
     public typingService: TypingService,
@@ -812,8 +812,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.appStorageService.setItem('recipientId', newConvId)
 
         try {
-            const groupMembers = [this.g.senderId, newConvId] as any;
-            this.groupsHandlerService.create(newConvId, groupMembers, (res, err) => {
+            const groupMembers = {};
+            groupMembers[this.g.senderId] = 1;
+            groupMembers[newConvId] = 1;
+
+            this.chat21Service.chatClient.groupCreate(newConvId, groupMembers, (err, res) => {
                 if (err) {
                     this.logger.error('[APP-COMP] create support group error', err);
                 } else {

@@ -108,27 +108,23 @@ export class MQTTGroupsHandler extends GroupsHandlerService {
             listMembers[member] = 1;
         });
 
-        const body = {
-            group_name: groupName,
-            group_members: listMembers
-        };
+        return new Promise((resolve, reject) => {
+            this.chat21Service.chatClient.groupCreate(groupName, listMembers, (err, res) => {
+                if (err) {
+                    this.logger.error('[MQTT-GROUPS-SERV] createGROUP error: ', err);
+                    if (callback) {
+                        callback(null, err);
+                    }
+                    reject(err);
+                    return;
+                }
 
-        const url = this.APIendpoint + '/' + this.tenant + '/groups';
-
-        return this.http.post(url, body).toPromise()
-            .then((res) => {
                 if (callback) {
                     callback(res, null);
                 }
-                return res;
-            })
-            .catch((error) => {
-                this.logger.error('[MQTT-GROUPS-SERV] createGROUP error: ', error);
-                if (callback) {
-                    callback(null, error);
-                }
-                throw error;
+                resolve(res);
             });
+        });
     }
 
     // create(groupName: string, members: [string], callback?:(res: any, error: any)=>void): Promise<any> {
