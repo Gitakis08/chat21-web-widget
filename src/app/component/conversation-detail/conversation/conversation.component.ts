@@ -171,8 +171,6 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
   public buttonClicked: any;
   public startTime: Date = new Date(); 
   private logger: LoggerService = LoggerInstance.getInstance();
-  private initialStartSentFor: string = null;
-
   constructor(
     //public el: ElementRef,
     public g: Globals,
@@ -432,7 +430,6 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
     this.logger.debug('[CONV-COMP] ------ 7: initializeTyping()', this.conversationId)
     this.initializeTyping();
 
-    this.sendInitialStartIfNeeded();
   }
 
   /**
@@ -1130,52 +1127,6 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
     
   }
 
-  /** CALLED BY: conv-header component */
-  private sendInitialStartIfNeeded() {
-    try {
-      const conversationId = this.conversationWith || this.conversationId;
-
-      if (!conversationId || !conversationId.startsWith('support-group-')) {
-        return;
-      }
-
-      if (this.initialStartSentFor === conversationId) {
-        return;
-      }
-
-      if (this.messages && this.messages.some((m: any) => m && m.text === '/start')) {
-        return;
-      }
-
-      this.initialStartSentFor = conversationId;
-
-      const attributes = {
-        subtype: 'info',
-        action: 'start',
-        ...this.g.attributes
-      };
-
-      setTimeout(() => {
-        try {
-          if (!this.conversationFooter) {
-            this.logger.error('[CONV-COMP] initial /start skipped: conversationFooter missing');
-            this.initialStartSentFor = null;
-            return;
-          }
-
-          this.logger.debug('[CONV-COMP] sending initial /start for support conversation', conversationId);
-          this.conversationFooter.sendMessage('/start', TYPE_MSG_TEXT, null, attributes);
-        } catch (e) {
-          this.logger.error('[CONV-COMP] initial /start send error', e);
-          this.initialStartSentFor = null;
-        }
-      }, 800);
-
-    } catch (e) {
-      this.logger.error('[CONV-COMP] sendInitialStartIfNeeded error', e);
-    }
-  }
-
   onRestartChat(){
     //restart SAME conversation calling /start againg
     let attributes = {
@@ -1611,4 +1562,3 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
 }
-
