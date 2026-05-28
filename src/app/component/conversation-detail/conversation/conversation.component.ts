@@ -751,6 +751,10 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
       this.logger.debug('[CONV-COMP] subscribeTypings data:', data);
       const userTyping = this.membersConversation.includes(key);
       if ( !userTyping && key) {
+        // Human agent typing must not stay hidden behind client-side bot "thinking".
+        if (!String(key).includes('bot_')) {
+          this.showThinkingMessage = false;
+        }
         const typingTimeout = Number(waitTime);
         const safeTypingTimeout = !isNaN(typingTimeout) && typingTimeout > 0 && typingTimeout < 10000
           ? typingTimeout
@@ -1358,14 +1362,9 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
     this.logger.debug('[CONV-COMP] onAfterSendMessageFN::::')
     if (message && message.sender === this.senderId) {
       this.logger.debug('[CONV-COMP] onAfterSendMessageFN:::: message', message)
-      // if (this.shouldShowThinkingForBot()) {
-      //   this.logger.debug('[CONV-COMP] shouldShowThinkingForBot::::', true)
-      //   this.startThinkingMessage();
-      // } else {
-      //   this.logger.debug('[CONV-COMP] shouldShowThinkingForBot::::', false)
-      //   this.showThinkingMessage = false;
-      // }
-      this.showThinkingMessage = true;
+      // Bot "thinking" only when the last server responder was a bot; otherwise
+      // showThinkingMessage blocks the human typing indicator in content view.
+      this.showThinkingMessage = this.lastServerSenderKind === 'bot';
     }
     this.onAfterSendMessage.emit(message)
   }

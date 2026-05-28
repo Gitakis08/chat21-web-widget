@@ -91,4 +91,52 @@ describe('ConversationComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should not enable client thinking after send when last server responder was human', () => {
+    component.senderId = 'client-1';
+    component.lastServerSenderKind = 'human';
+    component.showThinkingMessage = false;
+
+    component.onAfterSendMessageFN({ sender: 'client-1' } as any);
+
+    expect(component.showThinkingMessage).toBe(false);
+  });
+
+  it('should enable client thinking after send when last server responder was bot', () => {
+    component.senderId = 'client-1';
+    component.lastServerSenderKind = 'bot';
+    component.showThinkingMessage = false;
+
+    component.onAfterSendMessageFN({ sender: 'client-1' } as any);
+
+    expect(component.showThinkingMessage).toBe(true);
+  });
+
+  it('should clear client thinking when a human agent starts typing', () => {
+    component.showThinkingMessage = true;
+    component.membersConversation = ['SYSTEM', 'client-1'];
+
+    component.subscribeTypings({
+      uidUserTypingNow: 'agent-42',
+      nameUserTypingNow: 'Agent',
+      waitTime: 3000,
+    });
+
+    expect(component.showThinkingMessage).toBe(false);
+    expect(component.isTypings).toBe(true);
+  });
+
+  it('should preserve client thinking when bot messageWait typing arrives', () => {
+    component.showThinkingMessage = true;
+    component.membersConversation = ['SYSTEM', 'client-1'];
+
+    component.subscribeTypings({
+      uidUserTypingNow: 'bot_123',
+      nameUserTypingNow: 'Bot',
+      waitTime: 3000,
+    });
+
+    expect(component.showThinkingMessage).toBe(true);
+    expect(component.isTypings).toBe(true);
+  });
 });
