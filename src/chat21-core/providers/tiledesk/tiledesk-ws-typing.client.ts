@@ -7,7 +7,10 @@ export function buildTiledeskWebSocketBaseUrl(apiUrl: string, wsUrl?: string): s
   if (wsUrl) {
     return wsUrl.endsWith('/') ? wsUrl : `${wsUrl}/`;
   }
-  const trimmed = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl;
+  let trimmed = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl;
+  if (trimmed.endsWith('/api')) {
+    trimmed = `${trimmed.slice(0, -4)}/ws`;
+  }
   if (trimmed.startsWith('https://')) {
     return `${trimmed.replace(/^https:/, 'wss:')}/`;
   }
