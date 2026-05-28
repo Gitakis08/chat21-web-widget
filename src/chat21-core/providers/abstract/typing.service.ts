@@ -28,7 +28,8 @@ export abstract class TypingService {
   // }
 
   // functions
-  abstract initialize(tenant: string): void;
+  abstract initialize(tenant: string, serverBaseUrl?: string, wsUrl?: string): void;
   abstract isTyping(idConversation: string, idCurrentUser: string, isDirect: boolean): void;
   abstract setTyping(idConversation: string, message: string, idUser: string, userFullname: string): void;
+  abstract disconnectTyping(): void;
 }

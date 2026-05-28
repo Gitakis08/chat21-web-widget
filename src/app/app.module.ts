@@ -214,10 +214,10 @@ export function conversationHandlerFactory(chat21Service: Chat21Service, appConf
 //   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 // }
 
-export function typingFactory(chat21Service: Chat21Service, appConfig: AppConfigService) {
+export function typingFactory(appConfig: AppConfigService, appStorage: AppStorageService) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
-    return new MQTTTypingService();
+    return new MQTTTypingService(appStorage);
   } else {  
     return new FirebaseTypingService(); 
   }
@@ -392,7 +392,7 @@ export function uploadFactory(http: HttpClient, appConfig: AppConfigService, app
     {
       provide: TypingService,
       useFactory: typingFactory,
-      deps: [Chat21Service, AppConfigService]
+      deps: [AppConfigService, AppStorageService]
     },
     {
       provide: UploadService,
