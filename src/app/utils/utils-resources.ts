@@ -17,5 +17,5 @@ export const LOGOS_ITEMS: { [key: string] : { label: string, icon: string }} ={
     BASE_LOGO_NO_TEXT: {label: BRAND_BASE_INFO.BRAND_NAME, icon: 'assets/logos/tiledesk_logo_no_text.svg'},
     BASE_LOGO_WHITE: { label: BRAND_BASE_INFO.BRAND_NAME, icon: '"assets/logos/tiledesk-logo_new_white.svg'},
     BASE_LOGO_WHITE_NO_TEXT: { label: BRAND_BASE_INFO.BRAND_NAME, icon: '"assets/logos/tiledesk-logo_new_white.svg'},
-    BASE_LOGO_GRAY: { label: BRAND_BASE_INFO.BRAND_NAME, icon: 'https://support-pre.tiledesk.com/dashboard/assets/img/logos/tiledesk-logo_new_gray.svg'}
+    BASE_LOGO_GRAY: { label: BRAND_BASE_INFO.BRAND_NAME, icon: 'https://converse.pobuca.com/dashboard/assets/img/logos/tiledesk-logo_new_gray.svg'}
 }

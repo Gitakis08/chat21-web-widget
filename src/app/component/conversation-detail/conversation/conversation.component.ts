@@ -171,8 +171,6 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
   public buttonClicked: any;
   public startTime: Date = new Date(); 
   private logger: LoggerService = LoggerInstance.getInstance();
-  private initialStartSentFor: string = null;
-
   constructor(
     //public el: ElementRef,
     public g: Globals,
@@ -432,7 +430,6 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
     this.logger.debug('[CONV-COMP] ------ 7: initializeTyping()', this.conversationId)
     this.initializeTyping();
 
-    this.sendInitialStartIfNeeded();
   }
 
   /**
@@ -754,6 +751,10 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
       this.logger.debug('[CONV-COMP] subscribeTypings data:', data);
       const userTyping = this.membersConversation.includes(key);
       if ( !userTyping && key) {
+        // Human agent typing must not stay hidden behind client-side bot "thinking".
+        if (!String(key).includes('bot_')) {
+          this.showThinkingMessage = false;
+        }
         const typingTimeout = Number(waitTime);
         const safeTypingTimeout = !isNaN(typingTimeout) && typingTimeout > 0 && typingTimeout < 10000
           ? typingTimeout
@@ -1130,52 +1131,6 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
     
   }
 
-  /** CALLED BY: conv-header component */
-  private sendInitialStartIfNeeded() {
-    try {
-      const conversationId = this.conversationWith || this.conversationId;
-
-      if (!conversationId || !conversationId.startsWith('support-group-')) {
-        return;
-      }
-
-      if (this.initialStartSentFor === conversationId) {
-        return;
-      }
-
-      if (this.messages && this.messages.some((m: any) => m && m.text === '/start')) {
-        return;
-      }
-
-      this.initialStartSentFor = conversationId;
-
-      const attributes = {
-        subtype: 'info',
-        action: 'start',
-        ...this.g.attributes
-      };
-
-      setTimeout(() => {
-        try {
-          if (!this.conversationFooter) {
-            this.logger.error('[CONV-COMP] initial /start skipped: conversationFooter missing');
-            this.initialStartSentFor = null;
-            return;
-          }
-
-          this.logger.debug('[CONV-COMP] sending initial /start for support conversation', conversationId);
-          this.conversationFooter.sendMessage('/start', TYPE_MSG_TEXT, null, attributes);
-        } catch (e) {
-          this.logger.error('[CONV-COMP] initial /start send error', e);
-          this.initialStartSentFor = null;
-        }
-      }, 800);
-
-    } catch (e) {
-      this.logger.error('[CONV-COMP] sendInitialStartIfNeeded error', e);
-    }
-  }
-
   onRestartChat(){
     //restart SAME conversation calling /start againg
     let attributes = {
@@ -1407,14 +1362,9 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
     this.logger.debug('[CONV-COMP] onAfterSendMessageFN::::')
     if (message && message.sender === this.senderId) {
       this.logger.debug('[CONV-COMP] onAfterSendMessageFN:::: message', message)
-      // if (this.shouldShowThinkingForBot()) {
-      //   this.logger.debug('[CONV-COMP] shouldShowThinkingForBot::::', true)
-      //   this.startThinkingMessage();
-      // } else {
-      //   this.logger.debug('[CONV-COMP] shouldShowThinkingForBot::::', false)
-      //   this.showThinkingMessage = false;
-      // }
-      this.showThinkingMessage = true;
+      // Bot "thinking" only when the last server responder was a bot; otherwise
+      // showThinkingMessage blocks the human typing indicator in content view.
+      this.showThinkingMessage = this.lastServerSenderKind === 'bot';
     }
     this.onAfterSendMessage.emit(message)
   }
@@ -1481,7 +1431,7 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
     this.unsubscribe$.complete();
     this.chatManager.conversationsHandlerService.conversationRemoved.next(null)
     this.conversationHandlerService.messageWait.next(null)
-    this.typingService.BSIsTyping.next(null)
+    this.typingService.disconnectTyping()
 
     // TODO-GAB: da verificare se eliminarlo
     this.subscriptions.forEach(function (subscription) {
@@ -1611,4 +1561,3 @@ export class ConversationComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
 }
-

@@ -44,8 +44,12 @@ export class FirebaseTypingService extends TypingService {
     super();
   }
 
+  disconnectTyping(): void {
+    // Firebase typing uses realtime DB listeners; no Tiledesk WS subscription to tear down.
+  }
+
   /** */
-  public async initialize(tenant: string) {
+  public async initialize(tenant: string, _serverBaseUrl?: string, _wsUrl?: string) {
     this.tenant = tenant;
     this.logger.debug('[FIREBASETypingSERVICE] initialize - tenant ', this.tenant)
     this.urlNodeTypings = '/apps/' + this.tenant + '/typings/';

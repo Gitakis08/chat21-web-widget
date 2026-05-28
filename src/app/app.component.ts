@@ -485,7 +485,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.initAudioNotification()
 
                 new Promise(async (resolve, reject)=> {
-                    that.typingService.initialize(this.g.tenant);
+                    const appConfig = this.appConfigService.getConfig();
+                    that.typingService.initialize(this.g.tenant, appConfig?.apiUrl, appConfig?.wsUrl);
                     await that.presenceService.initialize(this.g.tenant);
                     resolve(null)
                 }).then(()=>{

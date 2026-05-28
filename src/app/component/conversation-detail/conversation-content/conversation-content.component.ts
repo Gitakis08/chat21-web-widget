@@ -24,6 +24,7 @@ export class ConversationContentComponent implements OnInit {
   @Input() nameUserTypingNow: string;
   @Input() typingLocation: string;
   @Input() showThinkingMessage: boolean;
+  @Input() lastServerSenderKind: 'bot' | 'human' | null;
   @Input() fullscreenMode: boolean;
   @Input() translationMap: Map< string, string>;
   @Input() stylesMap: Map<string, string>;
@@ -90,7 +91,6 @@ export class ConversationContentComponent implements OnInit {
     if(this.stylesMap && this.stylesMap.get('bubbleReceivedTextColor')) this.elementRef.nativeElement.querySelector('.c21-body').style.setProperty('--textColorReceive', this.stylesMap.get('bubbleReceivedTextColor'));
 
   }
-
 
   /**
    *
